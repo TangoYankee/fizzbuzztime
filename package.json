@@ -2,7 +2,7 @@
   "name": "fizzbuzztimer",
   "version": "1.0.0",
   "description": "timer that dispays time passed, fizz, buzz, or fizzbuzz  ",
-  "main": "index.js",
+  "main": "src/index.tsx",
   "scripts": {
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
