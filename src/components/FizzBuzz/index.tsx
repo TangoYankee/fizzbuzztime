@@ -3,10 +3,17 @@ import * as React from 'react'
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
 
+export interface TimerClick {
+    type: string,
+    datetime: Date
+}
+
 type FizzBuzzState = {
   valuesAreShown: boolean
   fizzValue: number
   buzzValue: number
+  timerClicks: TimerClick[][]
+  isStopped: boolean
 }
 
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
@@ -15,16 +22,29 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     this.state = {
       valuesAreShown: true,
       fizzValue: 2,
-      buzzValue: 10
+      buzzValue: 10,
+      timerClicks: [[]],
+      isStopped: true
     }
-    this.toggleValuesAreShown = this.toggleValuesAreShown.bind(this)
-    this.updateFizz = this.updateFizz.bind(this)
-    this.updateBuzz = this.updateBuzz.bind(this)
+  }
+
+  updateTimerClicks (timerClick: TimerClick) {
+    const timerClicks = this.state.timerClicks.slice()
+    timerClicks[timerClicks.length - 1].push(timerClick)
+    this.setState({
+      timerClicks: timerClicks
+    })
   }
 
   toggleValuesAreShown () {
     this.setState({
       valuesAreShown: !this.state.valuesAreShown
+    })
+  }
+
+  toggledStopped () {
+    this.setState({
+      isStopped: !this.state.isStopped
     })
   }
 
@@ -68,14 +88,19 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
 
   renderTimer () {
     return (
-      <Timer toggleValuesAreShown={() => this.toggleValuesAreShown()} />
+      <Timer
+        toggleValuesAreShown={() => this.toggleValuesAreShown()}
+        timerClicks={this.state.timerClicks}
+        updateTimerClicks={(timerClick:TimerClick) => this.updateTimerClicks(timerClick)}
+        isStopped={this.state.isStopped}
+        toggleStopped={() => this.toggledStopped()}
+      />
     )
   }
 
   render () {
     return (
       <div>
-        <h2>FizzBuzz Component</h2>
         {this.state.valuesAreShown ? this.renderValues() : this.renderTimer()}
       </div>
     )
