@@ -8,16 +8,21 @@ type TimerProps = {
   updateTimerClicks: FizzBuzz['updateTimerClicks']
   isStopped: boolean
   toggleStopped: FizzBuzz['toggledStopped']
+  fizzValue: number
+  buzzValue: number
 }
 
-export class Timer extends React.Component<TimerProps, { elapsedTime: number, }> {
+export class Timer extends React.Component<TimerProps, { elapsedSeconds: number, fizzBuzz: string }> {
   interval: NodeJS.Timeout
   constructor (props: TimerProps) {
     super(props)
-    this.state = { elapsedTime: 0 }
+    this.state = {
+      elapsedSeconds: 0,
+      fizzBuzz: ''
+    }
   }
 
-  getElapsedTime () {
+  getElapsedSeconds (): number {
     const currentTimerClicks: TimerClick[][] = this.props.timerClicks.slice()
     const currentTimer: TimerClick[] = currentTimerClicks[currentTimerClicks.length - 1]
     var startTotals: number = 0
@@ -27,13 +32,29 @@ export class Timer extends React.Component<TimerProps, { elapsedTime: number, }>
       timerClick.type === 'stop' && (stopTotals += timerClick.datetime.getTime())
     }
     this.props.isStopped || (stopTotals += new Date().getTime())
+    return Math.floor((stopTotals - startTotals) / 1000)
+  }
+
+  getFizzBuzz (elapsedSeconds: number): string {
+    const isFizz = (elapsedSeconds > 0 && elapsedSeconds % this.props.fizzValue === 0)
+    const isBuzz = (elapsedSeconds > 0 && elapsedSeconds % this.props.buzzValue === 0)
+    if (isFizz && isBuzz) return 'FizzBuzz'
+    else if (isFizz) return 'Fizz'
+    else if (isBuzz) return 'Buzz'
+    return ''
+  }
+
+  rollingTimer () {
+    const elapsedSeconds: number = this.getElapsedSeconds()
+    const fizzBuzz: string = this.getFizzBuzz(elapsedSeconds)
     this.setState({
-      elapsedTime: stopTotals - startTotals
+      elapsedSeconds: elapsedSeconds,
+      fizzBuzz: fizzBuzz
     })
   }
 
   componentDidMount () {
-    this.interval = setInterval(() => this.getElapsedTime(), 25)
+    this.interval = setInterval(() => this.rollingTimer(), 25)
   }
 
   componentWillUnmount () {
@@ -62,11 +83,14 @@ export class Timer extends React.Component<TimerProps, { elapsedTime: number, }>
         </button>
         <h3>Time Elapsed</h3>
         <div>
-          {Math.floor(this.state.elapsedTime / 1000)}
+          {this.state.elapsedSeconds}
         </div>
+        {/* Send an event value and date, rather than a TimeClicker Object */}
         <button onClick={() => this.clickStart({ type: 'start', datetime: new Date() })}>Start</button>
         <button onClick={() => this.clickStop({ type: 'stop', datetime: new Date() })}>Stop</button>
-        <div>Fizz</div>
+        <div>
+          {this.state.fizzBuzz}
+        </div>
       </div>
     )
   }

@@ -4,8 +4,8 @@ import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
 
 export interface TimerClick {
-    type: string,
-    datetime: Date
+  type: string,
+  datetime: Date
 }
 
 type FizzBuzzState = {
@@ -31,47 +31,25 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   updateTimerClicks (timerClick: TimerClick) {
     const timerClicks = this.state.timerClicks.slice()
     timerClicks[timerClicks.length - 1].push(timerClick)
-    this.setState({
-      timerClicks: timerClicks
-    })
+    this.setState({ timerClicks: timerClicks })
   }
 
   toggleValuesAreShown () {
-    this.setState({
-      valuesAreShown: !this.state.valuesAreShown
-    })
+    this.setState({ valuesAreShown: !this.state.valuesAreShown })
   }
 
   toggledStopped () {
-    this.setState({
-      isStopped: !this.state.isStopped
-    })
+    this.setState({ isStopped: !this.state.isStopped })
   }
 
   updateFizz: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const fizzIn: number = Number(event.target.value)
-    if (Number.isInteger(fizzIn)) {
-      this.setState({
-        fizzValue: fizzIn
-      })
-    } else {
-      this.setState({
-        fizzValue: 2
-      })
-    }
+    Number.isInteger(fizzIn) && this.setState({ fizzValue: fizzIn })
   }
 
   updateBuzz: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const buzzIn: number = Number(event.target.value)
-    if (Number.isInteger(buzzIn)) {
-      this.setState({
-        buzzValue: buzzIn
-      })
-    } else {
-      this.setState({
-        buzzValue: 3
-      })
-    }
+    Number.isInteger(buzzIn) && this.setState({ buzzValue: buzzIn })
   }
 
   renderValues () {
@@ -91,9 +69,11 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       <Timer
         toggleValuesAreShown={() => this.toggleValuesAreShown()}
         timerClicks={this.state.timerClicks}
-        updateTimerClicks={(timerClick:TimerClick) => this.updateTimerClicks(timerClick)}
+        updateTimerClicks={(timerClick: TimerClick) => this.updateTimerClicks(timerClick)}
         isStopped={this.state.isStopped}
         toggleStopped={() => this.toggledStopped()}
+        fizzValue={this.state.fizzValue}
+        buzzValue={this.state.buzzValue}
       />
     )
   }
