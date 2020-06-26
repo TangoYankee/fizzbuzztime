@@ -7,7 +7,6 @@ type TimerProps = {
   timerClicks: TimerClick[][]
   updateTimerClicks: FizzBuzz['updateTimerClicks']
   isStopped: boolean
-  toggleStopped: FizzBuzz['toggledStopped']
   fizzValue: number
   buzzValue: number
 }
@@ -61,20 +60,6 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
     clearInterval(this.interval)
   }
 
-  clickStart (timerClick: TimerClick) {
-    if (this.props.isStopped) {
-      this.props.updateTimerClicks(timerClick)
-      this.props.toggleStopped()
-    }
-  }
-
-  clickStop (timerClick: TimerClick) {
-    if (!this.props.isStopped) {
-      this.props.updateTimerClicks(timerClick)
-      this.props.toggleStopped()
-    }
-  }
-
   render () {
     return (
       <div>
@@ -85,9 +70,8 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
         <div>
           {this.state.elapsedSeconds}
         </div>
-        {/* Send an event value and date, rather than a TimeClicker Object */}
-        <button onClick={() => this.clickStart({ type: 'start', datetime: new Date() })}>Start</button>
-        <button onClick={() => this.clickStop({ type: 'stop', datetime: new Date() })}>Stop</button>
+        <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date() })}>Start</button>
+        <button onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>
         <div>
           {this.state.fizzBuzz}
         </div>

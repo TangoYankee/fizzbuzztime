@@ -29,18 +29,23 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   updateTimerClicks (timerClick: TimerClick) {
-    const timerClicks = this.state.timerClicks.slice()
-    timerClicks[timerClicks.length - 1].push(timerClick)
-    this.setState({ timerClicks: timerClicks })
+    const timerClicks: TimerClick[][] = this.state.timerClicks.slice()
+    const currentClicks: TimerClick[] = timerClicks[timerClicks.length - 1]
+    const clickType: string = timerClick.type
+    const isStopped: boolean = this.state.isStopped
+    if (clickType === 'stop' && isStopped) {
+      currentClicks.length > 0 && timerClicks.push([])
+      this.setState({ timerClicks: timerClicks })
+    } else if ((clickType === 'start' && isStopped) || (clickType === 'stop' && !isStopped)) {
+      timerClicks[timerClicks.length - 1].push(timerClick)
+      this.setState({
+        timerClicks: timerClicks,
+        isStopped: !this.state.isStopped
+      })
+    }
   }
 
-  toggleValuesAreShown () {
-    this.setState({ valuesAreShown: !this.state.valuesAreShown })
-  }
-
-  toggledStopped () {
-    this.setState({ isStopped: !this.state.isStopped })
-  }
+  toggleValuesAreShown () { this.setState({ valuesAreShown: !this.state.valuesAreShown }) }
 
   updateFizz: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const fizzIn: number = Number(event.target.value)
@@ -71,7 +76,6 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
         timerClicks={this.state.timerClicks}
         updateTimerClicks={(timerClick: TimerClick) => this.updateTimerClicks(timerClick)}
         isStopped={this.state.isStopped}
-        toggleStopped={() => this.toggledStopped()}
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
       />
