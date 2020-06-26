@@ -47,14 +47,15 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
 
   toggleValuesAreShown () { this.setState({ valuesAreShown: !this.state.valuesAreShown }) }
 
-  updateFizz: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const fizzIn: number = Number(event.target.value)
-    Number.isInteger(fizzIn) && this.setState({ fizzValue: fizzIn })
-  }
-
-  updateBuzz: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const buzzIn: number = Number(event.target.value)
-    Number.isInteger(buzzIn) && this.setState({ buzzValue: buzzIn })
+  updateValue: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const name:string = event.target.name
+    const value: number = Number(event.target.value)
+    if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
+      this.setState(prevState => ({
+        ...prevState,
+        [name]: value
+      }))
+    }
   }
 
   renderValues () {
@@ -63,8 +64,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
         toggleValuesAreShown={() => this.toggleValuesAreShown()}
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
-        updateFizz={(event) => this.updateFizz(event)}
-        updateBuzz={(event) => this.updateBuzz(event)}
+        updateValue={(event) => this.updateValue(event)}
       />
     )
   }
