@@ -15,6 +15,7 @@ type FizzBuzzState = {
   buzzValue: number
   timerClicks: TimerClick[][]
   isStopped: boolean
+  errorMessage: string
 }
 
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
@@ -25,7 +26,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       fizzValue: 2,
       buzzValue: 10,
       timerClicks: [[]],
-      isStopped: true
+      isStopped: true,
+      errorMessage: ''
     }
   }
 
@@ -56,16 +58,29 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     }
   }
 
-  toggleValuesAreShown () { this.setState({ valuesAreShown: !this.state.valuesAreShown }) }
+  toggleValuesAreShown () {
+    this.setState({
+      valuesAreShown: !this.state.valuesAreShown,
+      errorMessage: ''
+    })
+  }
 
   updateValue: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const name: string = event.target.name
-    const value: number = Number(event.target.value)
-    if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
-      this.setState(prevState => ({
-        ...prevState,
-        [name]: value
-      }))
+    if (this.state.timerClicks[this.state.timerClicks.length - 1].length === 0) {
+      const name: string = event.target.name
+      const value: number = Number(event.target.value)
+      if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
+        this.setState(prevState => ({
+          ...prevState,
+          [name]: value,
+          errorMessage: ''
+        }))
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Fizz and Buzz values cannot be updated once the timer has started.' +
+                      '\nGo to Timer and reset it before continuing'
+      })
     }
   }
 
@@ -76,6 +91,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
         updateValue={(event) => this.updateValue(event)}
+        errorMessage={this.state.errorMessage}
       />
     )
   }
