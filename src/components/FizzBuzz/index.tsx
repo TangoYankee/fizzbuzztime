@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
+import { MaxElapsedSeconds, getElapsedAtTime } from 'components/FizzBuzz/util'
 
 export interface TimerClick {
   type: string,
@@ -36,7 +37,17 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     if (clickType === 'stop' && isStopped) {
       currentClicks.length > 0 && timerClicks.push([])
       this.setState({ timerClicks: timerClicks })
-    } else if ((clickType === 'start' && isStopped) || (clickType === 'stop' && !isStopped)) {
+    } else if (
+      (
+        clickType === 'start' &&
+        isStopped &&
+        getElapsedAtTime(timerClicks, isStopped).elapsedSeconds < MaxElapsedSeconds
+      ) ||
+      (
+        clickType === 'stop' &&
+        !isStopped
+      )
+    ) {
       timerClicks[timerClicks.length - 1].push(timerClick)
       this.setState({
         timerClicks: timerClicks,
@@ -48,7 +59,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   toggleValuesAreShown () { this.setState({ valuesAreShown: !this.state.valuesAreShown }) }
 
   updateValue: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const name:string = event.target.name
+    const name: string = event.target.name
     const value: number = Number(event.target.value)
     if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
       this.setState(prevState => ({

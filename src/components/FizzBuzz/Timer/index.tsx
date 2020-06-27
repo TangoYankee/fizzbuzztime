@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { FizzBuzz, TimerClick } from 'components/FizzBuzz'
+import { ElapsedAtTime, getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
 
 type TimerProps = {
   toggleValuesAreShown: FizzBuzz['toggleValuesAreShown']
@@ -21,19 +22,6 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
     }
   }
 
-  getElapsedSeconds (): number {
-    const currentTimerClicks: TimerClick[][] = this.props.timerClicks.slice()
-    const currentTimer: TimerClick[] = currentTimerClicks[currentTimerClicks.length - 1]
-    var startTotals: number = 0
-    var stopTotals: number = 0
-    for (const timerClick of currentTimer) {
-      timerClick.type === 'start' && (startTotals += timerClick.datetime.getTime())
-      timerClick.type === 'stop' && (stopTotals += timerClick.datetime.getTime())
-    }
-    this.props.isStopped || (stopTotals += new Date().getTime())
-    return Math.floor((stopTotals - startTotals) / 1000)
-  }
-
   getFizzBuzz (elapsedSeconds: number): string {
     const isFizz = (elapsedSeconds > 0 && elapsedSeconds % this.props.fizzValue === 0)
     const isBuzz = (elapsedSeconds > 0 && elapsedSeconds % this.props.buzzValue === 0)
@@ -44,12 +32,22 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
   }
 
   rollingTimer () {
-    const elapsedSeconds: number = this.getElapsedSeconds()
-    const fizzBuzz: string = this.getFizzBuzz(elapsedSeconds)
-    this.setState({
-      elapsedSeconds: elapsedSeconds,
-      fizzBuzz: fizzBuzz
-    })
+    const { elapsedSeconds, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
+    if (elapsedSeconds < MaxElapsedSeconds) {
+      const fizzBuzz: string = this.getFizzBuzz(elapsedSeconds)
+      this.setState({
+        elapsedSeconds: elapsedSeconds,
+        fizzBuzz: fizzBuzz
+      })
+    } else if (!this.props.isStopped) {
+      const fizzBuzz: string = this.getFizzBuzz(MaxElapsedSeconds)
+      const stopTime:Date = (elapsedSeconds === MaxElapsedSeconds) ? atTime : adjustStopTime(atTime, elapsedSeconds)
+      this.props.updateTimerClicks({ type: 'stop', datetime: stopTime })
+      this.setState({
+        elapsedSeconds: MaxElapsedSeconds,
+        fizzBuzz: fizzBuzz
+      })
+    }
   }
 
   componentDidMount () {
@@ -70,6 +68,7 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
         <div>
           {this.state.elapsedSeconds}
         </div>
+        {/* <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date()-35994000) })}>Start</button> */}
         <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date() })}>Start</button>
         <button onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>
         <div>
