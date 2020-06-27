@@ -4,7 +4,7 @@ import { FizzBuzz } from 'components/FizzBuzz'
 
 export const App: React.FunctionComponent = () => {
   return (
-    <div>
+    <div className="app-container">
       <FizzBuzz />
     </div>
   )

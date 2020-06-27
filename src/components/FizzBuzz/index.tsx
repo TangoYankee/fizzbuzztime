@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import 'components/FizzBuzz/index.css'
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
 import { MaxElapsedSeconds, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
@@ -88,7 +89,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
           const valuesValid: boolean = areValuesValid(this.state.fizzValue, this.state.buzzValue)
           const fizzBuzzError = valuesValid
             ? { type: FizzBuzzErrorTypes.none, message: '' }
-            : { type: FizzBuzzErrorTypes.invalidRange, message: 'Fizz or Buzz value is not in range of 2 to 10, inclusive' }
+            : { type: FizzBuzzErrorTypes.invalidRange, message: 'Fizz or Buzz value is not in range of 2 to 10, inclusive.' }
           this.setState({ fizzBuzzError: fizzBuzzError })
         })
       }
@@ -96,7 +97,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       this.setState({
         fizzBuzzError: {
           type: FizzBuzzErrorTypes.timerStarted,
-          message: 'Fizz and Buzz values cannot be updated once the timer has started. Go to Timer and reset it before continuing'
+          message: 'Fizz and Buzz values cannot be updated once the timer has started. Go to Timer and reset it before continuing.'
         }
       })
     }
@@ -129,7 +130,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
 
   render () {
     return (
-      <div>
+      <div className='fizz-buzz-container'>
         {this.state.valuesAreShown ? this.renderValues() : this.renderTimer()}
       </div>
     )

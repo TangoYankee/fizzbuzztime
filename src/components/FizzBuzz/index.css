@@ -1,0 +1,27 @@
+.fizz-buzz-container {
+    height: inherit;
+    display: flex;
+}
+
+.fizz-buzz-child-container{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-btn {
+    border: 2px solid #707070;
+    color: #707070;
+    padding: 15px 30px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.nav-btn:disabled {
+    cursor: default;
+    opacity: 50%;   
+}

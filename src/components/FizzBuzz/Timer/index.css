@@ -1,0 +1,55 @@
+.timer-container .nav-btn {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+}
+
+.timer-title{
+    font-size: 30px;
+    margin: 0 auto 50px;
+}
+
+.counter-display{
+    font-size: 30px;
+    font-weight: bold;
+    border: 2px solid #707070;
+    border-radius: 5px;
+    width: 640px;
+    background-color: #f5f5f5;
+    padding: 28px;
+    margin: 0 auto 50px;
+}
+
+.timer-btn-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto 65px;
+}
+
+.timer-btn {
+    width: 200px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.timer-btn.start-btn {
+    background-color: #5ccc87;
+    margin-right: 30px;
+}
+
+.timer-btn.stop-btn {
+    background-color: #E66666;
+}
+
+.fizz-buzz-text {
+    font-size: 80px;
+    font-weight: bold;
+    margin: 0 auto;
+    height: 90px;
+}
