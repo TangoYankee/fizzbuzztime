@@ -2,11 +2,22 @@ import * as React from 'react'
 
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
-import { MaxElapsedSeconds, getElapsedAtTime } from 'components/FizzBuzz/util'
+import { MaxElapsedSeconds, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
 
 export interface TimerClick {
   type: string,
   datetime: Date
+}
+
+export enum FizzBuzzErrorTypes{
+  none = 'none',
+  invalidRange = 'invalidRange',
+  timerStarted = 'timerStarted'
+}
+
+export interface FizzBuzzError {
+  type: FizzBuzzErrorTypes,
+  message: string
 }
 
 type FizzBuzzState = {
@@ -15,7 +26,7 @@ type FizzBuzzState = {
   buzzValue: number
   timerClicks: TimerClick[][]
   isStopped: boolean
-  errorMessage: string
+  fizzBuzzError: FizzBuzzError
 }
 
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
@@ -27,7 +38,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       buzzValue: 10,
       timerClicks: [[]],
       isStopped: true,
-      errorMessage: ''
+      fizzBuzzError: { type: FizzBuzzErrorTypes.none, message: '' }
     }
   }
 
@@ -61,7 +72,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   toggleValuesAreShown () {
     this.setState({
       valuesAreShown: !this.state.valuesAreShown,
-      errorMessage: ''
+      fizzBuzzError: { type: FizzBuzzErrorTypes.none, message: '' }
     })
   }
 
@@ -72,14 +83,21 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
         this.setState(prevState => ({
           ...prevState,
-          [name]: value,
-          errorMessage: ''
-        }))
+          [name]: value
+        }), () => {
+          const valuesValid: boolean = areValuesValid(this.state.fizzValue, this.state.buzzValue)
+          const fizzBuzzError = valuesValid
+            ? { type: FizzBuzzErrorTypes.none, message: '' }
+            : { type: FizzBuzzErrorTypes.invalidRange, message: 'Fizz or Buzz value is not in range of 2 to 10, inclusive' }
+          this.setState({ fizzBuzzError: fizzBuzzError })
+        })
       }
     } else {
       this.setState({
-        errorMessage: 'Fizz and Buzz values cannot be updated once the timer has started.' +
-                      '\nGo to Timer and reset it before continuing'
+        fizzBuzzError: {
+          type: FizzBuzzErrorTypes.timerStarted,
+          message: 'Fizz and Buzz values cannot be updated once the timer has started. Go to Timer and reset it before continuing'
+        }
       })
     }
   }
@@ -91,7 +109,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
         updateValue={(event) => this.updateValue(event)}
-        errorMessage={this.state.errorMessage}
+        fizzBuzzError={this.state.fizzBuzzError}
       />
     )
   }

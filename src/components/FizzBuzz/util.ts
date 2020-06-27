@@ -3,8 +3,8 @@ import { TimerClick } from 'components/FizzBuzz'
 export const MaxElapsedSeconds: number = 35999
 
 export interface ElapsedAtTime {
-    elapsedSeconds: number
-    atTime: Date
+  elapsedSeconds: number
+  atTime: Date
 }
 
 export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean): ElapsedAtTime => {
@@ -27,4 +27,8 @@ export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean
 export const adjustStopTime = (atTime: Date, elapsedSeconds: number): Date => {
   const adjustedStopSeconds: number = Math.floor(atTime.getTime() / 1000) - (elapsedSeconds - MaxElapsedSeconds)
   return new Date(adjustedStopSeconds * 1000)
+}
+
+export const areValuesValid = (fizzValue: number, buzzValue: number) => {
+  return fizzValue >= 2 && buzzValue >= 2 && fizzValue <= 10 && buzzValue <= 10
 }
