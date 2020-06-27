@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { FizzBuzz, TimerClick } from 'components/FizzBuzz'
 import { ElapsedAtTime, getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
+import { formatTime } from 'components/FizzBuzz/Timer/util'
 
 type TimerProps = {
   toggleValuesAreShown: FizzBuzz['toggleValuesAreShown']
@@ -66,9 +67,11 @@ export class Timer extends React.Component<TimerProps, { elapsedSeconds: number,
         </button>
         <h3>Time Elapsed</h3>
         <div>
-          {this.state.elapsedSeconds}
+          {formatTime(this.state.elapsedSeconds)}
         </div>
         {/* <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date()-35994000) })}>Start</button> */}
+        {/* <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date()-6594000) })}>Start</button> */}
+
         <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date() })}>Start</button>
         <button onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>
         <div>
