@@ -3,35 +3,11 @@ import * as React from 'react'
 import 'components/FizzBuzz/index.css'
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
+import { TimerClick, FizzBuzzErrorTypes, FizzBuzzState } from 'components/FizzBuzz/types'
 import { MaxElapsedSeconds, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
 
-export interface TimerClick {
-  type: string,
-  datetime: Date
-}
-
-export enum FizzBuzzErrorTypes{
-  none = 'none',
-  invalidRange = 'invalidRange',
-  timerStarted = 'timerStarted'
-}
-
-export interface FizzBuzzError {
-  type: FizzBuzzErrorTypes,
-  message: string
-}
-
-type FizzBuzzState = {
-  valuesAreShown: boolean
-  fizzValue: number
-  buzzValue: number
-  timerClicks: TimerClick[][]
-  isStopped: boolean
-  fizzBuzzError: FizzBuzzError
-}
-
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
-  constructor (props: any) {
+  constructor (props: {}) {
     super(props)
     this.state = {
       valuesAreShown: true,

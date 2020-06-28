@@ -1,15 +1,8 @@
 import * as React from 'react'
 
 import 'components/FizzBuzz/Values/index.css'
-import { FizzBuzz, FizzBuzzError, FizzBuzzErrorTypes } from 'components/FizzBuzz'
-
-type ValuesProps = {
-  toggleValuesAreShown: FizzBuzz['toggleValuesAreShown'],
-  fizzValue: number,
-  buzzValue: number,
-  updateValue: FizzBuzz['updateValue'],
-  fizzBuzzError: FizzBuzzError
-}
+import { FizzBuzzErrorTypes } from 'components/FizzBuzz/types'
+import { ValuesProps } from 'components/FizzBuzz/Values/types'
 
 export const Values = ({ toggleValuesAreShown, fizzValue, buzzValue, updateValue, fizzBuzzError }: ValuesProps) => {
   return (

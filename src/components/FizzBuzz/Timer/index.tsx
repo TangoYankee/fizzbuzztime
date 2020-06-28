@@ -1,20 +1,11 @@
 import * as React from 'react'
 
 import 'components/FizzBuzz/Timer/index.css'
-import { FizzBuzz, TimerClick } from 'components/FizzBuzz'
+import { TimerState, TimerProps } from 'components/FizzBuzz/Timer/types'
 import { ElapsedAtTime, getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
 import { formatTime } from 'components/FizzBuzz/Timer/util'
 
-type TimerProps = {
-  toggleValuesAreShown: FizzBuzz['toggleValuesAreShown']
-  timerClicks: TimerClick[][]
-  updateTimerClicks: FizzBuzz['updateTimerClicks']
-  isStopped: boolean
-  fizzValue: number
-  buzzValue: number
-}
-
-export class Timer extends React.Component<TimerProps, { elapsedSeconds: number, fizzBuzz: string }> {
+export class Timer extends React.Component<TimerProps, TimerState> {
   interval: NodeJS.Timeout
   constructor (props: TimerProps) {
     super(props)
