@@ -3,42 +3,28 @@ import * as React from 'react'
 import 'components/FizzBuzz/Timer/index.css'
 import { TimerState, TimerProps } from 'components/FizzBuzz/Timer/types'
 import { ElapsedAtTime, getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
-import { formatTime } from 'components/FizzBuzz/Timer/util'
+import { formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
 
 export class Timer extends React.Component<TimerProps, TimerState> {
   interval: NodeJS.Timeout
   constructor (props: TimerProps) {
     super(props)
     this.state = {
-      elapsedSeconds: 0,
-      fizzBuzz: ''
+      elapsedSeconds: 0
     }
-  }
-
-  getFizzBuzz (elapsedSeconds: number): string {
-    const isFizz = (elapsedSeconds > 0 && elapsedSeconds % this.props.fizzValue === 0)
-    const isBuzz = (elapsedSeconds > 0 && elapsedSeconds % this.props.buzzValue === 0)
-    if (isFizz && isBuzz) return 'FizzBuzz'
-    else if (isFizz) return 'Fizz'
-    else if (isBuzz) return 'Buzz'
-    return ''
   }
 
   rollingTimer () {
     const { elapsedSeconds, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
     if (elapsedSeconds < MaxElapsedSeconds) {
-      const fizzBuzz: string = this.getFizzBuzz(elapsedSeconds)
       this.setState({
-        elapsedSeconds: elapsedSeconds,
-        fizzBuzz: fizzBuzz
+        elapsedSeconds: elapsedSeconds
       })
     } else if (!this.props.isStopped) {
-      const fizzBuzz: string = this.getFizzBuzz(MaxElapsedSeconds)
       const stopTime: Date = (elapsedSeconds === MaxElapsedSeconds) ? atTime : adjustStopTime(atTime, elapsedSeconds)
       this.props.updateTimerClicks({ type: 'stop', datetime: stopTime })
       this.setState({
-        elapsedSeconds: MaxElapsedSeconds,
-        fizzBuzz: fizzBuzz
+        elapsedSeconds: MaxElapsedSeconds
       })
     }
   }
@@ -68,7 +54,7 @@ export class Timer extends React.Component<TimerProps, TimerState> {
           <button className="timer-btn stop-btn" onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>
         </div>
         <div className="fizz-buzz-text">
-          {this.state.fizzBuzz}
+          {getFizzBuzzText(this.state.elapsedSeconds, this.props.fizzValue, this.props.buzzValue)}
         </div>
       </div>
     )

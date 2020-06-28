@@ -3,7 +3,6 @@ import { TimerClick } from 'components/FizzBuzz/types'
 
 export type TimerState = {
     elapsedSeconds: number
-    fizzBuzz: string
   }
 
 export type TimerProps = {

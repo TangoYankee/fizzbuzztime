@@ -1,4 +1,4 @@
-import { TimerClick } from 'components/FizzBuzz'
+import { TimerClick } from 'components/FizzBuzz/types'
 
 export const MaxElapsedSeconds: number = 35999
 
