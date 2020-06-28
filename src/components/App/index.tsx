@@ -4,8 +4,8 @@ import { FizzBuzz } from 'components/FizzBuzz'
 
 export const App: React.FunctionComponent = () => {
   return (
-    <div className="app-container">
+    <main className="app-container">
       <FizzBuzz />
-    </div>
+    </main>
   )
 }
