@@ -28,15 +28,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       currentClicks.length > 0 && timerClicks.push([])
       this.setState({ timerClicks: timerClicks })
     } else if (
-      (
-        clickType === 'start' &&
-        isStopped &&
-        getElapsedAtTime(timerClicks, isStopped).elapsedSeconds < MaxElapsedSeconds
-      ) ||
-      (
-        clickType === 'stop' &&
-        !isStopped
-      )
+      (clickType === 'start' && isStopped && getElapsedAtTime(timerClicks, isStopped).elapsedSeconds < MaxElapsedSeconds) ||
+      (clickType === 'stop' && !isStopped)
     ) {
       timerClicks[timerClicks.length - 1].push(timerClick)
       this.setState({
