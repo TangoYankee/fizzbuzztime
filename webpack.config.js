@@ -25,7 +25,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /\.test.tsx?$/],
         include: path.join(__dirname, 'src'),
         loader: 'babel-loader'
       },
@@ -74,5 +74,5 @@ module.exports = {
       inject: true,
       template: path.join(__dirname, 'index.html')
     })
-  ]
+  ],
 }
