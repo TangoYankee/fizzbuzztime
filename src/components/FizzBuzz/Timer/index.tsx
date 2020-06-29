@@ -1,8 +1,9 @@
 import * as React from 'react'
 
 import 'components/FizzBuzz/Timer/index.css'
+import { ElapsedAtTime } from 'components/FizzBuzz/types'
 import { TimerState, TimerProps } from 'components/FizzBuzz/Timer/types'
-import { ElapsedAtTime, getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
+import { getElapsedAtTime, MaxElapsedSeconds, adjustStopTime } from 'components/FizzBuzz/util'
 import { formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
 
 export class Timer extends React.Component<TimerProps, TimerState> {

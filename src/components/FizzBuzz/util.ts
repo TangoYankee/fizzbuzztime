@@ -1,11 +1,6 @@
-import { TimerClick } from 'components/FizzBuzz/types'
+import { TimerClick, ElapsedAtTime } from 'components/FizzBuzz/types'
 
 export const MaxElapsedSeconds: number = 35999
-
-export interface ElapsedAtTime {
-  elapsedSeconds: number
-  atTime: Date
-}
 
 export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean): ElapsedAtTime => {
   const currentTimer: TimerClick[] = timerClicks[timerClicks.length - 1]

@@ -74,5 +74,5 @@ module.exports = {
       inject: true,
       template: path.join(__dirname, 'index.html')
     })
-  ],
+  ]
 }

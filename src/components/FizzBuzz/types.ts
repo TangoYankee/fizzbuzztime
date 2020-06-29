@@ -1,3 +1,8 @@
+export interface ElapsedAtTime {
+    elapsedSeconds: number
+    atTime: Date
+  }
+
 export interface TimerClick {
     type: string,
     datetime: Date
