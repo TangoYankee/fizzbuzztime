@@ -4,7 +4,7 @@ import { FizzBuzz } from 'components/FizzBuzz'
 import { render, screen, fireEvent } from '@testing-library/react'
 import * as MockDate from 'mockdate'
 
-describe('<FizzBuzz /> <Values />', () => {
+describe('Validate the input of Fizz and Buzz Values', () => {
   let fizzTextbox: HTMLInputElement | undefined
   let buzzTextbox: HTMLInputElement | undefined
   let navButton: HTMLButtonElement | undefined
@@ -65,7 +65,7 @@ describe('<FizzBuzz /> <Values />', () => {
   })
 })
 
-describe('Toggle <Values /> and <Timer />', () => {
+describe('Toggle between values and timer components', () => {
   it('should start on Values Component and toggle to Timer', () => {
     render(<FizzBuzz />)
     expect(screen.getByRole('button', { name: 'Go to Timer >' }))
@@ -76,7 +76,7 @@ describe('Toggle <Values /> and <Timer />', () => {
   })
 })
 
-describe('<Timer />', () => {
+describe('Time elapses on button clicks', () => {
   let testStart:Date | undefined
   beforeEach(() => {
     jest.useFakeTimers()
@@ -139,11 +139,11 @@ describe('<Timer />', () => {
   })
 })
 
-describe('<Values /> Lockout when time elapsed', () => {
+describe('Lockout changing values when timer has started', () => {
   let testStart:Date | undefined
   beforeEach(() => {
-    jest.useFakeTimers()
     testStart = new Date()
+    jest.useFakeTimers()
     render(<FizzBuzz />)
     fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
@@ -152,6 +152,7 @@ describe('<Values /> Lockout when time elapsed', () => {
 
   afterEach(() => {
     testStart = undefined
+    jest.useRealTimers()
   })
 
   it('should lock out setting the Fizz value when there is already a start time', () => {
@@ -169,5 +170,46 @@ describe('<Values /> Lockout when time elapsed', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
     fireEvent.click(screen.getByRole('button', { name: '< Set Times' }))
     expect(screen.queryByText(/the timer has started/)).toBeNull()
+  })
+})
+
+describe('Prevent going over max allowed time', () => {
+  let testStart: Date | undefined
+  beforeEach(() => {
+    testStart = new Date()
+    jest.useFakeTimers()
+    render(<FizzBuzz />)
+    fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+  })
+
+  afterEach(() => {
+    testStart = undefined
+    jest.useRealTimers()
+    MockDate.reset()
+  })
+
+  it('should only go to the max time', () => {
+    MockDate.set(testStart!.getTime() + 4e8)
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/9:59:59/))
+  })
+
+  it('should prevent the timer from going over max time when started again', () => {
+    MockDate.set(testStart!.getTime() + 4e8)
+    jest.advanceTimersByTime(25)
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    MockDate.set(testStart!.getTime() + 5e8)
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/9:59:59/))
+  })
+
+  it('should reset the timer max value is hit and stop is pressed', () => {
+    MockDate.set(testStart!.getTime() + 4e8)
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/9:59:59/))
+    fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/0:00:00/))
   })
 })
