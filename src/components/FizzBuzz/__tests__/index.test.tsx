@@ -90,16 +90,84 @@ describe('<Timer />', () => {
     MockDate.reset()
   })
 
-  it('should initially render with no time elasped', () => {
+  it('should initially render with no time elasped, neither Fizz nor Buzz', () => {
     expect(screen.getByText(/0:00:00/))
+    expect(screen.queryByText(/Fizz/)).toBeNull()
+    expect(screen.queryByText(/Buzz/)).toBeNull()
   })
 
-  it('should have 4 seconds elapse from pressing start', () => {
-    const pastDate:Date = new Date(testStart!.getTime() - 4000)
-    MockDate.set(pastDate)
+  it('should have 4 seconds elapse from pressing start, Fizz!', () => {
+    MockDate.set(new Date(testStart!.getTime() - 4000))
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     MockDate.reset()
     jest.advanceTimersByTime(25)
     expect(screen.getByText(/0:00:04/))
+    expect(screen.getByText('Fizz'))
+  })
+
+  it('should lock out double clicks of start, FizzBuzz!', () => {
+    MockDate.set(new Date(testStart!.getTime() - 10000))
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    MockDate.set(new Date(testStart!.getTime() - 1000))
+    MockDate.reset()
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/0:00:10/))
+    expect(screen.getByText('FizzBuzz'))
+  })
+
+  it('should calculate time based on last stopped time while stopped, neither Fizz nor Buzz', () => {
+    MockDate.set(new Date(testStart!.getTime() - 10000))
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    MockDate.set(new Date(testStart!.getTime() - 5000))
+    fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
+    MockDate.set(new Date(testStart!.getTime() + 20000))
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/0:00:05/))
+    expect(screen.queryByText(/Fizz/)).toBeNull()
+  })
+
+  it('should reset time on double click of stop, neither Fizz nor Buzz', () => {
+    MockDate.set(new Date(testStart!.getTime() - 10000))
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    MockDate.set(new Date(testStart!.getTime() - 5000))
+    fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
+    MockDate.set(new Date(testStart!.getTime() + 20000))
+    fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
+    jest.advanceTimersByTime(25)
+    expect(screen.getByText(/0:00:00/))
+    expect(screen.queryByText(/Fizz/)).toBeNull()
+  })
+})
+
+describe('<Values /> Lockout when time elapsed', () => {
+  let testStart:Date | undefined
+  beforeEach(() => {
+    jest.useFakeTimers()
+    testStart = new Date()
+    render(<FizzBuzz />)
+    fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    fireEvent.click(screen.getByRole('button', { name: '< Set Times' }))
+  })
+
+  afterEach(() => {
+    testStart = undefined
+  })
+
+  it('should lock out setting the Fizz value when there is already a start time', () => {
+    expect(screen.queryByText(/the timer has started/)).toBeNull()
+    const fizzTextbox: HTMLInputElement = screen.getByRole('textbox', { name: 'Fizz:' }) as HTMLInputElement
+    fireEvent.change(fizzTextbox, { target: { value: '3' } })
+    expect(screen.getByText(/the timer has started/))
+    expect(fizzTextbox.value).toEqual('2')
+  })
+
+  it('should lock out Buzz. clear the lock message when navigating between pages', () => {
+    const buzzTextbox: HTMLInputElement = screen.getByRole('textbox', { name: 'Buzz:' }) as HTMLInputElement
+    fireEvent.change(buzzTextbox, { target: { value: '3' } })
+    expect(screen.getByText(/the timer has started/))
+    fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
+    fireEvent.click(screen.getByRole('button', { name: '< Set Times' }))
+    expect(screen.queryByText(/the timer has started/)).toBeNull()
   })
 })
