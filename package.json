@@ -49,6 +49,7 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.1.0",
+    "mockdate": "^3.0.2",
     "source-map-loader": "^1.0.0",
     "style-loader": "^1.2.1",
     "ts-jest": "^26.1.1",

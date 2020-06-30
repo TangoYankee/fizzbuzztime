@@ -1,6 +1,6 @@
 import * as React from 'react'
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { Values } from 'components/FizzBuzz/Values'
 import { ValuesProps } from 'components/FizzBuzz/Values/types'
 import { FizzBuzzErrorTypes } from 'components/FizzBuzz/types'
@@ -29,5 +29,7 @@ describe('<Values />', () => {
     render(<Values {...defaultValuesProps} />)
     screen.getByText('invalid range')
     expect(screen.getByRole('button', { name: 'Go to Timer >' })).toBeDisabled()
+    const fizztextbox:HTMLInputElement = (screen.getByRole('textbox', { name: 'Fizz:' })) as HTMLInputElement
+    fireEvent.change(fizztextbox, { target: { value: '7' } })
   })
 })
