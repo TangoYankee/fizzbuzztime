@@ -48,8 +48,6 @@ export class Timer extends React.Component<TimerProps, TimerState> {
         <div className="counter-display">
           {formatTime(this.state.elapsedSeconds)}
         </div>
-        {/* <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date()-35994000) })}>Start</button> */}
-        {/* <button onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date()-6594000) })}>Start</button> */}
         <div className="timer-btn-container">
           <button className="timer-btn start-btn" onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date() })}>Start</button>
           <button className="timer-btn stop-btn" onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>

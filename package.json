@@ -9,7 +9,8 @@
     "start:dev": "webpack-dev-server --open --mode=development",
     "lint": "eslint . --ext .ts,.tsx,.js",
     "lint-fix": "eslint . --ext .ts,.tsx,.js --fix",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "keywords": [
     "reactjs"
@@ -74,6 +75,9 @@
     ],
     "moduleNameMapper": {
       "^components(.*)$": "<rootDir>/src/components/$1"
-    }
+    },
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   }
 }
