@@ -1,5 +1,5 @@
 export interface ElapsedAtTime {
-    elapsedSeconds: number
+    elapsedMilliSecs: number
     atTime: Date
   }
 

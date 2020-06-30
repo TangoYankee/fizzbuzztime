@@ -4,7 +4,7 @@ import 'components/FizzBuzz/index.css'
 import { Timer } from 'components/FizzBuzz/Timer'
 import { Values } from 'components/FizzBuzz/Values'
 import { TimerClick, FizzBuzzErrorTypes, FizzBuzzState } from 'components/FizzBuzz/types'
-import { MaxElapsedSeconds, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
+import { MaxElapsedMilliSecs, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
 
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   constructor (props: {}) {
@@ -28,7 +28,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       currentClicks.length > 0 && timerClicks.push([])
       this.setState({ timerClicks: timerClicks })
     } else if (
-      (clickType === 'start' && isStopped && getElapsedAtTime(timerClicks, isStopped).elapsedSeconds < MaxElapsedSeconds) ||
+      (clickType === 'start' && isStopped && getElapsedAtTime(timerClicks, isStopped).elapsedMilliSecs < MaxElapsedMilliSecs) ||
       (clickType === 'stop' && !isStopped)
     ) {
       timerClicks[timerClicks.length - 1].push(timerClick)

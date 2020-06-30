@@ -140,19 +140,11 @@ describe('Time elapses on button clicks', () => {
 })
 
 describe('Lockout changing values when timer has started', () => {
-  let testStart:Date | undefined
   beforeEach(() => {
-    testStart = new Date()
-    jest.useFakeTimers()
     render(<FizzBuzz />)
     fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     fireEvent.click(screen.getByRole('button', { name: '< Set Times' }))
-  })
-
-  afterEach(() => {
-    testStart = undefined
-    jest.useRealTimers()
   })
 
   it('should lock out setting the Fizz value when there is already a start time', () => {
@@ -199,7 +191,6 @@ describe('Prevent going over max allowed time', () => {
     MockDate.set(testStart!.getTime() + 4e8)
     jest.advanceTimersByTime(25)
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
-    MockDate.set(testStart!.getTime() + 5e8)
     jest.advanceTimersByTime(25)
     expect(screen.getByText(/9:59:59/))
   })

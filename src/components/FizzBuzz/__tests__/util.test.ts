@@ -13,17 +13,17 @@ describe('calculate how much time has passed', () => {
   beforeEach(() => {
     testStart = new Date()
 
-    const startOneOffset:number = 10000
+    const startOneOffset:number = 10e3
     clickStartOne = { type: 'start', datetime: new Date(testStart!.getTime() - startOneOffset) }
-    const stopOneOffset:number = 7000
+    const stopOneOffset:number = 7e3
     clickStopOne = { type: 'stop', datetime: new Date(testStart!.getTime() - stopOneOffset) }
-    firstSetDif = Math.floor((startOneOffset - stopOneOffset) / 1000)
+    firstSetDif = startOneOffset - stopOneOffset
 
-    const startTwoOffset: number = 5000
+    const startTwoOffset: number = 5e3
     clickStartTwo = { type: 'start', datetime: new Date(testStart!.getTime() - startTwoOffset) }
-    const stopTwoOffset: number = 3000
+    const stopTwoOffset: number = 3e3
     clickStopTwo = { type: 'stop', datetime: new Date(testStart!.getTime() - stopTwoOffset) }
-    secondSetDif = Math.floor((startTwoOffset - stopTwoOffset) / 1000)
+    secondSetDif = startTwoOffset - stopTwoOffset
   })
 
   afterEach(() => {
@@ -44,7 +44,7 @@ describe('calculate how much time has passed', () => {
     ]
     const expectedElapsedSeconds: number = (0)
     const elapsedAtTime: ElapsedAtTime = getElapsedAtTime(timerClicks, isStopped)
-    expect(elapsedAtTime.elapsedSeconds).toEqual(expectedElapsedSeconds)
+    expect(elapsedAtTime.elapsedMilliSecs).toEqual(expectedElapsedSeconds)
   })
 
   it('is stopped with multiple multiple clicks', () => {
@@ -53,9 +53,9 @@ describe('calculate how much time has passed', () => {
       [clickStartOne!, clickStopOne!],
       [clickStartOne!, clickStopOne!, clickStartTwo!, clickStopTwo!]
     ]
-    const expectedElapsedSeconds: number = (firstSetDif! + secondSetDif!)
-    const elapsedSeconds: number = getElapsedAtTime(timerClicks, isStopped).elapsedSeconds
-    expect(elapsedSeconds).toEqual(expectedElapsedSeconds)
+    const expectedElapsedMilliSecs: number = (firstSetDif! + secondSetDif!)
+    const elapsedMilliSecs: number = getElapsedAtTime(timerClicks, isStopped).elapsedMilliSecs
+    expect(elapsedMilliSecs).toEqual(expectedElapsedMilliSecs)
   })
 
   it('is started with no stop clicks', () => {
@@ -65,9 +65,9 @@ describe('calculate how much time has passed', () => {
       [clickStartOne!]
     ]
     const elapsedAtTime: ElapsedAtTime = getElapsedAtTime(timerClicks, isStopped)
-    const lastStartClickInSecs = Math.floor(timerClicks[timerClicks.length - 1][0].datetime.getTime() / 1000)
-    const expectedElapsedSeconds:number = Math.floor(elapsedAtTime.atTime.getTime() / 1000) - lastStartClickInSecs
-    expect(elapsedAtTime.elapsedSeconds).toEqual(expectedElapsedSeconds)
+    const lastStartClick = timerClicks[timerClicks.length - 1][0].datetime.getTime()
+    const expectedElapsedMilliSecs:number = elapsedAtTime.atTime.getTime() - lastStartClick
+    expect(elapsedAtTime.elapsedMilliSecs).toEqual(expectedElapsedMilliSecs)
   })
 
   it('should be started with multiple clicks', () => {
@@ -77,45 +77,39 @@ describe('calculate how much time has passed', () => {
       [clickStartOne!, clickStopOne!, clickStartTwo!]
     ]
     const elapsedAtTime: ElapsedAtTime = getElapsedAtTime(timerClicks, isStopped)
-    const lastStartClickInSecs = Math.floor(timerClicks[timerClicks.length - 1][2].datetime.getTime() / 1000)
-    const expectedElapsedSeconds:number = (Math.floor(elapsedAtTime.atTime.getTime() / 1000) - lastStartClickInSecs) + firstSetDif!
-    expect(elapsedAtTime.elapsedSeconds).toEqual(expectedElapsedSeconds)
+    const lastStartClick = timerClicks[timerClicks.length - 1][2].datetime.getTime()
+    const expectedElapsedMilliSecs:number = (elapsedAtTime.atTime.getTime() - lastStartClick) + firstSetDif!
+    expect(elapsedAtTime.elapsedMilliSecs).toEqual(expectedElapsedMilliSecs)
   })
 })
 
 describe('time should be adjusted to reflect when the max elapsed time would be hit.', () => {
-  /* Max Elapsed Seconds: 35999 */
+  /* Max Elapsed Milli Secs: 35999e3 */
   let atTime: Date | undefined
-  let atTimeSeconds: number | undefined
   beforeEach(() => {
     atTime = new Date()
-    atTimeSeconds = Math.floor(atTime!.getTime() / 1000)
   })
 
   afterEach(() => {
     atTime = undefined
-    atTimeSeconds = undefined
   })
 
   it('should return the current time', () => {
-    const elapsedSeconds = 35999
-    const adjustedTime = adjustStopTime(atTime!, elapsedSeconds)
-    const adjustedSeconds = Math.floor(adjustedTime.getTime() / 1000)
-    expect(adjustedSeconds).toEqual(atTimeSeconds!)
+    const elapsedMilliSeconds = 35999e3
+    const adjustedTime = adjustStopTime(atTime!, elapsedMilliSeconds)
+    expect(adjustedTime.getTime()).toEqual(atTime!.getTime())
   })
 
   it('should return a time in the past', () => {
-    const elapsedSeconds = 36000
-    const adjustedTime = adjustStopTime(atTime!, elapsedSeconds)
-    const adjustedSeconds = Math.floor(adjustedTime.getTime() / 1000)
-    expect(adjustedSeconds).toBeLessThan(atTimeSeconds!)
+    const elapsedMilliSecs = 36000e3
+    const adjustedTime = adjustStopTime(atTime!, elapsedMilliSecs)
+    expect(adjustedTime.getTime()).toBeLessThan(atTime!.getTime())
   })
 
   it('should return a time in the future', () => {
-    const elapsedSeconds = 35998
-    const adjustedTime = adjustStopTime(atTime!, elapsedSeconds)
-    const adjustedSeconds = Math.floor(adjustedTime.getTime() / 1000)
-    expect(adjustedSeconds).toBeGreaterThan(atTimeSeconds!)
+    const elapsedMilliSecs = 35998e3
+    const adjustedTime = adjustStopTime(atTime!, elapsedMilliSecs)
+    expect(adjustedTime.getTime()).toBeGreaterThan(atTime!.getTime())
   })
 })
 

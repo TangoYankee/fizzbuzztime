@@ -1,6 +1,6 @@
 import { TimerClick, ElapsedAtTime } from 'components/FizzBuzz/types'
 
-export const MaxElapsedSeconds: number = 35999
+export const MaxElapsedMilliSecs: number = 35999e3
 
 export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean): ElapsedAtTime => {
   const currentTimer: TimerClick[] = timerClicks[timerClicks.length - 1]
@@ -12,16 +12,16 @@ export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean
   }
   const currentTime: Date = new Date()
   isStopped || (stopTotals += currentTime.getTime())
-  const elapsedSeconds: number = Math.floor((stopTotals - startTotals) / 1000)
+  const elapsedMilliSecs: number = stopTotals - startTotals
   return {
-    elapsedSeconds: elapsedSeconds,
+    elapsedMilliSecs: elapsedMilliSecs,
     atTime: currentTime
   }
 }
 
-export const adjustStopTime = (atTime: Date, elapsedSeconds: number): Date => {
-  const adjustedStopSeconds: number = Math.floor(atTime.getTime() / 1000) - (elapsedSeconds - MaxElapsedSeconds)
-  return new Date(adjustedStopSeconds * 1000)
+export const adjustStopTime = (atTime: Date, elapsedMilliSecs: number): Date => {
+  const adjustedStopMilliSecs: number = atTime.getTime() - (elapsedMilliSecs - MaxElapsedMilliSecs)
+  return new Date(adjustedStopMilliSecs)
 }
 
 export const areValuesValid = (fizzValue: number, buzzValue: number) => {
