@@ -1,4 +1,4 @@
-import { formatTime, getFizzBuzzText } from '../util'
+import { formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
 
 describe('integer of elapsed seconds formatted into string', () => {
   it('should be zero', () => { expect(formatTime(0)).toEqual('0:00:00') })

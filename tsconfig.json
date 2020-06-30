@@ -13,7 +13,11 @@
         "src/**/*"
     ],
     "exclude": [
-        "./src/**/*test.ts",
-        "./src/**/*test.tsx"
-    ]
+        "node_modules",
+        "build",
+        "coverage",
+        "webpack",
+        "jest"
+    ],
+    "types":["webpack-env"]
 }
