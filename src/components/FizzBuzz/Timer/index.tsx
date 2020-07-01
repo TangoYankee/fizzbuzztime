@@ -27,15 +27,12 @@ export class Timer extends React.Component<TimerProps, TimerState> {
     */
     const { elapsedMilliSecs, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
     if (elapsedMilliSecs < MaxElapsedMilliSecs) {
-      this.setState({
-        elapsedMilliSecs: elapsedMilliSecs
-      })
+      this.setState({elapsedMilliSecs})
     } else if (!this.props.isStopped) {
-      const stopTime: Date = (elapsedMilliSecs === MaxElapsedMilliSecs) ? atTime : adjustStopTime(atTime, elapsedMilliSecs)
+      // const stopTime: Date = (elapsedMilliSecs === MaxElapsedMilliSecs) ? atTime : adjustStopTime(atTime, elapsedMilliSecs)
+      const stopTime: Date = adjustStopTime(atTime, elapsedMilliSecs)
       this.props.updateTimerClicks({ type: 'stop', datetime: stopTime })
-      this.setState({
-        elapsedMilliSecs: MaxElapsedMilliSecs
-      })
+      this.setState({elapsedMilliSecs: MaxElapsedMilliSecs })
     }
   }
 

@@ -34,7 +34,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     const isStopped: boolean = this.state.isStopped
     if (clickType === 'stop' && isStopped) {
       currentClicks.length > 0 && timerClicks.push([])
-      this.setState({ timerClicks: timerClicks })
+      this.setState({ timerClicks })
     } else if (
       (clickType === 'start' && isStopped && getElapsedAtTime(timerClicks, isStopped).elapsedMilliSecs < MaxElapsedMilliSecs) ||
       (clickType === 'stop' && !isStopped)
@@ -62,7 +62,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     When the state of the values is updated with integers,
     callback to check whether these new integers are in the valid range.
     Inform the user if something is wrong. */
-    if (this.state.timerClicks[this.state.timerClicks.length - 1].length === 0) {
+    const currentTimerClicks:number = this.state.timerClicks[this.state.timerClicks.length - 1].length
+    if (currentTimerClicks === 0) {
       const name: string = event.target.name
       const value: number = Number(event.target.value)
       if ((name === 'fizzValue' || name === 'buzzValue') && (Number.isInteger(value))) {
@@ -94,7 +95,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
         toggleValuesAreShown={() => this.toggleValuesAreShown()}
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
-        updateValue={(event) => this.updateValue(event)}
+        updateValue={this.updateValue}
         fizzBuzzError={this.state.fizzBuzzError}
       />
     )

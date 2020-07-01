@@ -78,7 +78,7 @@ describe('Toggle between values and timer components', () => {
 })
 
 describe('Time elapses on button clicks', () => {
-  let testStart:Date | undefined
+  let testStart: Date | undefined
   beforeEach(() => {
     jest.useFakeTimers()
     testStart = new Date()

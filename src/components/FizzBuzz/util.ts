@@ -11,8 +11,10 @@ export const getElapsedAtTime = (timerClicks: TimerClick[][], isStopped: boolean
   var startTotals: number = 0
   var stopTotals: number = 0
   for (const timerClick of currentTimer) {
-    timerClick.type === 'start' && (startTotals += timerClick.datetime.getTime())
-    timerClick.type === 'stop' && (stopTotals += timerClick.datetime.getTime())
+    const type:string = timerClick.type
+    const time:number = timerClick.datetime.getTime()
+    type === 'start' && (startTotals += time)
+    type === 'stop' && (stopTotals += time)
   }
   const currentTime: Date = new Date()
   isStopped || (stopTotals += currentTime.getTime())
