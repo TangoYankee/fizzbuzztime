@@ -3,7 +3,7 @@ Start, stop and reset a timer; also view total elapsed time
 
 ## Production Deployment
 ### Live website
-A branded version of the website is availale at https://tangoyankee.io/fizzbuzztime.
+A branded version of the website is available at https://tangoyankee.io/fizzbuzztime.
 
 ### Local version
 The application comes prebuilt in the `/dist` folder. In order to view it on a local computer:
@@ -26,12 +26,12 @@ The application is bundled using webpack and babel. A development server is avai
 ### Available scrips
 
 `npm run build`  
-Build a production ready bundle of the application. 
+Build a production bundle of the application. 
 Files are sent to `/dist` folder  
 
 `npm run watch`  
 Have webpatch monitor the repository for changes during development.
-View the application by opening the `index.html` from the `dist` in a browser. Refresh the browser to view any changes.
+View the application by opening the `index.html` from the `dist` folder in a browser. Refresh the browser to view any changes.
 
 `npm run start:dev`  
 Run a Node development server. The site will render at `localhost:9000/`.  
@@ -47,8 +47,8 @@ Allow linter to automatically fix errors, when able
 Run full test suite and recieve coverage report
 
 `npm run test:watch`  
-Request Jest monitor for changes.  
-When a test is updated, Jest will automatically rerun the changed tests.
+Request Jest monitor the code for changes.  
+When a test is updated, Jest will automatically rerun the affected tests.
 
 
 ## Technology
@@ -56,6 +56,7 @@ When a test is updated, Jest will automatically rerun the changed tests.
 - [Reactjs](https://reactjs.org)
 
 ### Development
+- [Nodejs](nodejs.org/)
 - [Typescript](https://www.typescriptlang.org/)
 - [Webpack](https://webpack.js.org)
 - [Babel](https://babeljs.io/)
@@ -67,11 +68,11 @@ When a test is updated, Jest will automatically rerun the changed tests.
 Publicly available implementations of Timers and Counters in React, [including the React Documentation](https://reactjs.org/docs/state-and-lifecycle.html#adding-lifecycle-methods-to-a-class), tend to initialize a counter and then update it based on an interval. This implementation is satisfactory to
 demonstrate lifecycles. However, the timer itself is [susceptible to drifting](https://johnresig.com/blog/how-javascript-timers-work/) because the interval occurs *after a* second rather than *exactly every* second.
 
-For FizzBuzzTime, the application records the Date whenever time the user clicks the start or stop button. This results in a list of start and stop times. Elapsed time is calculated by finding the differences in the
+For FizzBuzzTime, the application records the Date whenever the user clicks the start or stop button. This results in a list of start and stop times. Elapsed time is calculated by finding the differences in the
 start and stop times. If the time is still moving, the current time is used in place of a final stop time. 
 When the timer is reset, a new blank list is created to hold a new list of start and stop times. 
 
-in addition to being more reliable, this method provides more options to work with the data. The recorded user interactions could be logged to a database in order to study user interactions. Additionally, the date lists could be used in a "history" feature that allows users to navigate through timers they've used in the past.
+In addition to being more reliable, this method provides more options to work with the data. The recorded user interactions could be logged to a database in order to study user interactions. Additionally, the date lists could be used in a "history" feature that allows users to navigate through timers they've used in the past.
 
 ## Future improvements
 1) Text that appears in the site could be extracted into a separate content manager. This could help decouple the text of the site with the logic of how it is displayed. This makes it easier for content managers and developers to independently fulfill their responsibilities.
@@ -86,3 +87,12 @@ scale for this site is 1.0rem to 10px.
 
 Additionally, the start and stop buttons were flagged by the [Wave Accessibility Tool](https://wave.webaim.org/) for having low contrast. This could be
 resolved by increasing the contrasting between the font and background, or increasing the default font size.
+
+## Testing note
+When configuring the tests of Timer component, some of the initial runs indicated there was a possible memory leak caused by the `setInterval` and `rollingTimer` functions:  
+> Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+
+In the source code, these memory leaks were already addressed by clearing the interval in `CompomentWillUnmount`. Manual testing appears to confirm this.
+
+Once the tests were fully configured with the correct intervals, the errors could be not be reproduced.
+Ultimately, it does not appear to affect the production build and is limited to the narrow testing conditions. However, I would want to continue monitoring for performance issues associated with memory leaks.
