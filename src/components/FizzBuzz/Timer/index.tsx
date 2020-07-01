@@ -4,9 +4,11 @@ import 'components/FizzBuzz/Timer/index.css'
 import { ElapsedAtTime } from 'components/FizzBuzz/types'
 import { TimerState, TimerProps } from 'components/FizzBuzz/Timer/types'
 import { getElapsedAtTime, MaxElapsedMilliSecs, adjustStopTime } from 'components/FizzBuzz/util'
-import { formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
+import { updateInterval, formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
 
 export class Timer extends React.Component<TimerProps, TimerState> {
+  /* Display the elapsed time. Also, control the start, stop, and reset functionality
+    Child of FizzBuzz. Sibling of Values. */
   interval: NodeJS.Timeout
   constructor (props: TimerProps) {
     super(props)
@@ -16,6 +18,13 @@ export class Timer extends React.Component<TimerProps, TimerState> {
   }
 
   rollingTimer () {
+    /* determine the amount of time that has elapsed, multiple times a second.
+    Allow the counter to run as long as it is below the max allowed time.
+    If the counter is still running and hits the maximum allowed elapsed time,
+    automatically stop it at the time when it would've hit the max time.
+    If the counter is stopped and at the maximum allowed time, do nothing.
+    Attempting to stop it again will reset it.
+    */
     const { elapsedMilliSecs, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
     if (elapsedMilliSecs < MaxElapsedMilliSecs) {
       this.setState({
@@ -31,10 +40,12 @@ export class Timer extends React.Component<TimerProps, TimerState> {
   }
 
   componentDidMount () {
-    this.interval = setInterval(() => this.rollingTimer(), 25)
+    /* 1/25 milliseconds is the slowest update rate without noticeable lag in mounting timer. */
+    this.interval = setInterval(() => this.rollingTimer(), updateInterval)
   }
 
   componentWillUnmount () {
+    /* Prevent memory leaks */
     clearInterval(this.interval)
   }
 

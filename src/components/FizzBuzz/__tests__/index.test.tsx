@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { FizzBuzz } from 'components/FizzBuzz'
+import { updateInterval } from 'components/FizzBuzz/Timer/util'
 import { render, screen, fireEvent } from '@testing-library/react'
 import * as MockDate from 'mockdate'
 
@@ -100,7 +101,7 @@ describe('Time elapses on button clicks', () => {
     MockDate.set(new Date(testStart!.getTime() - 4000))
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     MockDate.reset()
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/0:00:04/))
     expect(screen.getByText('Fizz'))
   })
@@ -110,7 +111,7 @@ describe('Time elapses on button clicks', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     MockDate.set(new Date(testStart!.getTime() - 1000))
     MockDate.reset()
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/0:00:10/))
     expect(screen.getByText('FizzBuzz'))
   })
@@ -121,7 +122,7 @@ describe('Time elapses on button clicks', () => {
     MockDate.set(new Date(testStart!.getTime() - 5000))
     fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
     MockDate.set(new Date(testStart!.getTime() + 20000))
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/0:00:05/))
     expect(screen.queryByText(/Fizz/)).toBeNull()
   })
@@ -133,7 +134,7 @@ describe('Time elapses on button clicks', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
     MockDate.set(new Date(testStart!.getTime() + 20000))
     fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/0:00:00/))
     expect(screen.queryByText(/Fizz/)).toBeNull()
   })
@@ -183,24 +184,24 @@ describe('Prevent going over max allowed time', () => {
 
   it('should only go to the max time', () => {
     MockDate.set(testStart!.getTime() + 4e8)
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
   })
 
   it('should prevent the timer from going over max time when started again', () => {
     MockDate.set(testStart!.getTime() + 4e8)
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
   })
 
   it('should reset the timer max value is hit and stop is pressed', () => {
     MockDate.set(testStart!.getTime() + 4e8)
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
     fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))
-    jest.advanceTimersByTime(25)
+    jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/0:00:00/))
   })
 })

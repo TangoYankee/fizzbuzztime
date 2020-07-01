@@ -7,6 +7,9 @@ import { TimerClick, FizzBuzzErrorTypes, FizzBuzzState } from 'components/FizzBu
 import { MaxElapsedMilliSecs, getElapsedAtTime, areValuesValid } from 'components/FizzBuzz/util'
 
 export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
+  /* Parent Component. Children are:
+  - Timer, shows elapsed seconds
+  - Values, shows inputs for fizz and buzz */
   constructor (props: {}) {
     super(props)
     this.state = {
@@ -20,6 +23,11 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   updateTimerClicks (timerClick: TimerClick) {
+    /* Receive the date of either a stop or a start click.
+    When the user clicks stops and the timer is already stopped, reset the timer by making a new blank list.
+    When the user clicks stop and the timer is running, stop the timer and record the time to the current list.
+    When the user clicks start, only start the timer if it wasn't already running.
+    Also, the elapsed time must be below the allowed maximum to start the timer. */
     const timerClicks: TimerClick[][] = this.state.timerClicks.slice()
     const currentClicks: TimerClick[] = timerClicks[timerClicks.length - 1]
     const clickType: string = timerClick.type
@@ -40,6 +48,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   toggleValuesAreShown () {
+    /* Switch shown compononent between Timer and Values.
+    Default to Values */
     this.setState({
       valuesAreShown: !this.state.valuesAreShown,
       fizzBuzzError: { type: FizzBuzzErrorTypes.none, message: '' }
@@ -47,6 +57,11 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   updateValue: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    /* Fizz and Buzz values can only be updated when no time has elapsed.
+    This is indicated by the lastest list of start/stop values being empty.
+    When the state of the values is updated with integers,
+    callback to check whether these new integers are in the valid range.
+    Inform the user if something is wrong. */
     if (this.state.timerClicks[this.state.timerClicks.length - 1].length === 0) {
       const name: string = event.target.name
       const value: number = Number(event.target.value)
@@ -73,6 +88,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   renderValues () {
+    /* Send state of FizzBuzz parent to prop of Values child */
     return (
       <Values
         toggleValuesAreShown={() => this.toggleValuesAreShown()}
@@ -85,6 +101,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   renderTimer () {
+    /* Send state of FizzBuzz parent to prop of Timer child */
     return (
       <Timer
         toggleValuesAreShown={() => this.toggleValuesAreShown()}
@@ -98,6 +115,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   render () {
+    /* Render either child, defaulting to inputs for fizz buzz values */
     return (
       <div className='fizz-buzz-container'>
         {this.state.valuesAreShown ? this.renderValues() : this.renderTimer()}
