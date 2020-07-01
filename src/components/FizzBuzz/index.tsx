@@ -27,7 +27,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     When the user clicks stops and the timer is already stopped, reset the timer by making a new blank list.
     When the user clicks stop and the timer is running, stop the timer and record the time to the current list.
     When the user clicks start, only start the timer if it wasn't already running.
-    Also, the elapsed time must be below the allowed maximum to start the timer. */
+    This prevents recording double entries of start, stop, or reset
+    Also, the elapsed time must be below the allowed maximum to start the timer. This prevents time overruns. */
     const timerClicks: TimerClick[][] = this.state.timerClicks.slice()
     const currentClicks: TimerClick[] = timerClicks[timerClicks.length - 1]
     const clickType: string = timerClick.type
@@ -39,7 +40,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       (clickType === 'start' && isStopped && getElapsedAtTime(timerClicks, isStopped).elapsedMilliSecs < MaxElapsedMilliSecs) ||
       (clickType === 'stop' && !isStopped)
     ) {
-      timerClicks[timerClicks.length - 1].push(timerClick)
+      currentClicks.push(timerClick)
       this.setState({
         timerClicks: timerClicks,
         isStopped: !this.state.isStopped
@@ -48,8 +49,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
   }
 
   toggleValuesAreShown () {
-    /* Switch shown compononent between Timer and Values.
-    Default to Values */
+    /* Switch shown component between Timer and Values. Default to Values.
+    Clear errors when switching views. */
     this.setState({
       valuesAreShown: !this.state.valuesAreShown,
       fizzBuzzError: { type: FizzBuzzErrorTypes.none, message: '' }
@@ -58,11 +59,11 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
 
   updateValue: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     /* Fizz and Buzz values can only be updated when no time has elapsed.
-    This is indicated by the lastest list of start/stop values being empty.
+    This is indicated by the latest list of start/stop values being empty.
     When the state of the values is updated with integers,
-    callback to check whether these new integers are in the valid range.
+    callback and check whether these new integers are in the valid range.
     Inform the user if something is wrong. */
-    const currentTimerClicks:number = this.state.timerClicks[this.state.timerClicks.length - 1].length
+    const currentTimerClicks: number = this.state.timerClicks[this.state.timerClicks.length - 1].length
     if (currentTimerClicks === 0) {
       const name: string = event.target.name
       const value: number = Number(event.target.value)

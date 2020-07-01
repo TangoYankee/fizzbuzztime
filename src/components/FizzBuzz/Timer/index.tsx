@@ -7,7 +7,7 @@ import { getElapsedAtTime, MaxElapsedMilliSecs, adjustStopTime } from 'component
 import { updateInterval, formatTime, getFizzBuzzText } from 'components/FizzBuzz/Timer/util'
 
 export class Timer extends React.Component<TimerProps, TimerState> {
-  /* Display the elapsed time. Also, control the start, stop, and reset functionality
+  /* Display the elapsed time. Also, control the start, stop, and reset functionality.
     Child of FizzBuzz. Sibling of Values. */
   interval: NodeJS.Timeout
   constructor (props: TimerProps) {
@@ -18,18 +18,16 @@ export class Timer extends React.Component<TimerProps, TimerState> {
   }
 
   rollingTimer () {
-    /* determine the amount of time that has elapsed, multiple times a second.
+    /* Determine the amount of time that has elapsed, multiple times a second.
     Allow the counter to run as long as it is below the max allowed time.
     If the counter is still running and hits the maximum allowed elapsed time,
     automatically stop it at the time when it would've hit the max time.
     If the counter is stopped and at the maximum allowed time, do nothing.
-    Attempting to stop it again will reset it.
-    */
+    Attempting to stop it again will reset it. */
     const { elapsedMilliSecs, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
-    if (elapsedMilliSecs < MaxElapsedMilliSecs) {
+    if (this.props.isStopped || elapsedMilliSecs < MaxElapsedMilliSecs) {
       this.setState({ elapsedMilliSecs })
     } else if (!this.props.isStopped) {
-      // const stopTime: Date = (elapsedMilliSecs === MaxElapsedMilliSecs) ? atTime : adjustStopTime(atTime, elapsedMilliSecs)
       const stopTime: Date = adjustStopTime(atTime, elapsedMilliSecs)
       this.props.updateTimerClicks({ type: 'stop', datetime: stopTime })
       this.setState({ elapsedMilliSecs: MaxElapsedMilliSecs })

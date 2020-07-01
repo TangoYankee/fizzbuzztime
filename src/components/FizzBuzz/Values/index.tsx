@@ -5,7 +5,7 @@ import { FizzBuzzErrorTypes } from 'components/FizzBuzz/types'
 import { ValuesProps } from 'components/FizzBuzz/Values/types'
 
 export const Values = ({ toggleValuesAreShown, fizzValue, buzzValue, updateValue, fizzBuzzError }: ValuesProps) => {
-  /* Display the values for Fizz and Buzz. Allow the user to update them.
+  /* Display the values for Fizz and Buzz. Allow the user to update them. Provide feedback messages.
     Child of FizzBuzz. Sibling of Timer. */
   return (
     <div className="fizz-buzz-child-container values-container">

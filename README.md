@@ -30,7 +30,7 @@ Build a production bundle of the application.
 Files are sent to `/dist` folder  
 
 `npm run watch`  
-Have webpatch monitor the repository for changes during development.
+Have webpack monitor the repository for changes during development.
 View the application by opening the `index.html` from the `dist` folder in a browser. Refresh the browser to view any changes.
 
 `npm run start:dev`  
@@ -44,7 +44,7 @@ View linting errors
 Allow linter to automatically fix errors, when able
 
 `npm run test`  
-Run full test suite and recieve coverage report
+Run full test suite and receive coverage report
 
 `npm run test:watch`  
 Request Jest monitor the code for changes.  
@@ -78,21 +78,12 @@ In addition to being more reliable, this method provides more options to work wi
 1) Text that appears in the site could be extracted into a separate content manager. This could help decouple the text of the site with the logic of how it is displayed. This makes it easier for content managers and developers to independently fulfill their responsibilities.
 
 2) Webpack offers a feature to [split code into separate bundles](https://webpack.js.org/guides/code-splitting/). This improves initial load times. It may also
-prevent resources from loading unneccessarily. For this site, the `Timer` component is loaded along with the `Values` Component. However, it is not seen until the user clicks the `Go to Timer >` button. This is a potential place to split the code, only loading the `Timer` component after the user navigates there.
+prevent resources from loading unnecessarily. For this site, the `Timer` component is loaded along with the `Values` Component. However, it is not seen until the user clicks the `Go to Timer >` button. This is a potential place to split the code, only loading the `Timer` component after the user navigates there.
 
 ## Accessibility note
 The css dimensions in the project specifications were listed in pixels. From an accessibility standpoint, [advocates](https://www.24a11y.com/2019/pixels-vs-relative-units-in-css-why-its-still-a-big-deal/) generally recommend using relative units, as they allow users to scale the website
-using font settings. To make the conversion from REM to PX easier, the root font size (traditioally 16px) is scaled at 62.5%. This means the default
+using font settings. To make the conversion from REM to PX easier, the root font size (traditionally 16px) is scaled at 62.5%. This means the default
 scale for this site is 1.0rem to 10px.
 
 Additionally, the start and stop buttons were flagged by the [Wave Accessibility Tool](https://wave.webaim.org/) for having low contrast. This could be
 resolved by increasing the contrasting between the font and background, or increasing the default font size.
-
-## Testing note
-When configuring the tests of Timer component, some of the initial runs indicated there was a possible memory leak caused by the `setInterval` and `rollingTimer` functions:  
-> Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-
-In the source code, these memory leak concerns were already addressed by clearing the interval in `CompomentWillUnmount`. Manual testing appears to confirm this.
-
-Once the tests were fully configured with the correct intervals, the errors could be not be reproduced.
-Ultimately, it does not appear to affect the production build and is limited to the narrow testing conditions. However, I would want to continue monitoring for performance issues associated with memory leaks.
