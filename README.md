@@ -92,7 +92,7 @@ resolved by increasing the contrasting between the font and background, or incre
 When configuring the tests of Timer component, some of the initial runs indicated there was a possible memory leak caused by the `setInterval` and `rollingTimer` functions:  
 > Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
 
-In the source code, these memory leaks were already addressed by clearing the interval in `CompomentWillUnmount`. Manual testing appears to confirm this.
+In the source code, these memory leak concerns were already addressed by clearing the interval in `CompomentWillUnmount`. Manual testing appears to confirm this.
 
 Once the tests were fully configured with the correct intervals, the errors could be not be reproduced.
 Ultimately, it does not appear to affect the production build and is limited to the narrow testing conditions. However, I would want to continue monitoring for performance issues associated with memory leaks.
