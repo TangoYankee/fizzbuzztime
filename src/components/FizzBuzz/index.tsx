@@ -120,6 +120,9 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     /* Render either child, defaulting to inputs for fizz buzz values */
     return (
       <div className='fizz-buzz-container'>
+        <h1 className="brand">
+          <a href="https://tangoyankee.io/" title="Timothy Miller portfolio">__tangoyankee__</a>
+        </h1>
         {this.state.valuesAreShown ? this.renderValues() : this.renderTimer()}
       </div>
     )

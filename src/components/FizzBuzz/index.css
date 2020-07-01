@@ -1,3 +1,18 @@
+.brand {
+    position: absolute;
+    top: 5rem;
+    right: 5rem;
+}
+
+.brand a{
+    color: #707070;
+    text-decoration: none;
+} 
+
+.brand a:hover {
+    text-decoration: underline;
+}
+
 .fizz-buzz-container {
     height: inherit;
     display: flex;
