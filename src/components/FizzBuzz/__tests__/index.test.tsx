@@ -4,6 +4,7 @@ import { FizzBuzz } from 'components/FizzBuzz'
 import { updateInterval } from 'components/FizzBuzz/Timer/util'
 import { render, screen, fireEvent } from '@testing-library/react'
 import * as MockDate from 'mockdate'
+import { MaxElapsedMilliSecs } from '../util'
 
 describe('Validate the input of Fizz and Buzz Values', () => {
   let fizzTextbox: HTMLInputElement | undefined
@@ -182,37 +183,33 @@ describe('Prevent going over max allowed time', () => {
   Ultimately, the errors seem isolated to the testing environment. However, it is still prudent to watch for memory
   leaks in the production environment. */
 
-  let testStart: Date | undefined
-  beforeEach(() => {
-    testStart = new Date()
+   beforeEach(() => {
     jest.useFakeTimers()
     render(<FizzBuzz />)
     fireEvent.click(screen.getByRole('button', { name: 'Go to Timer >' }))
+    MockDate.set(new Date().getTime() - MaxElapsedMilliSecs)
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    MockDate.reset()
   })
 
   afterEach(() => {
-    testStart = undefined
     jest.useRealTimers()
     MockDate.reset()
   })
 
   it('should only go to the max time', () => {
-    MockDate.set(testStart!.getTime() + 4e8)
     jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
   })
 
-  it.skip('should prevent the timer from going over max time when started again', () => {
-    MockDate.set(testStart!.getTime() + 4e8)
+  it('should prevent the timer from going over max time when started again', () => {
     jest.advanceTimersByTime(updateInterval)
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
   })
 
-  it.skip('should reset the timer max value is hit and stop is pressed', () => {
-    MockDate.set(testStart!.getTime() + 4e8)
+  it('should reset the timer max value is hit and stop is pressed', () => {
     jest.advanceTimersByTime(updateInterval)
     expect(screen.getByText(/9:59:59/))
     fireEvent.click(screen.getByRole('button', { name: 'Stop/Reset' }))

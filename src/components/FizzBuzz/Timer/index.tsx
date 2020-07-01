@@ -25,7 +25,7 @@ export class Timer extends React.Component<TimerProps, TimerState> {
     If the counter is stopped and at the maximum allowed time, do nothing.
     Attempting to stop it again will reset it. */
     const { elapsedMilliSecs, atTime }: ElapsedAtTime = getElapsedAtTime(this.props.timerClicks, this.props.isStopped)
-    if (this.props.isStopped || elapsedMilliSecs < MaxElapsedMilliSecs) {
+    if (elapsedMilliSecs < MaxElapsedMilliSecs) {
       this.setState({ elapsedMilliSecs })
     } else if (!this.props.isStopped) {
       const stopTime: Date = adjustStopTime(atTime, elapsedMilliSecs)
@@ -36,6 +36,8 @@ export class Timer extends React.Component<TimerProps, TimerState> {
 
   componentDidMount () {
     /* 1/25 milliseconds is the slowest update rate without noticeable lag in mounting timer. */
+    const elapsedMilliSecs:number = getElapsedAtTime(this.props.timerClicks, this.props.isStopped).elapsedMilliSecs
+    this.setState({ elapsedMilliSecs })
     this.interval = setInterval(() => this.rollingTimer(), updateInterval)
   }
 
@@ -55,6 +57,7 @@ export class Timer extends React.Component<TimerProps, TimerState> {
           {formatTime(this.state.elapsedMilliSecs)}
         </div>
         <div className="timer-btn-container">
+          <button className="timer-btn start-btn" onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date(new Date().getTime() - 35994e3) })}>Debug</button>
           <button className="timer-btn start-btn" onClick={() => this.props.updateTimerClicks({ type: 'start', datetime: new Date() })}>Start</button>
           <button className="timer-btn stop-btn" onClick={() => this.props.updateTimerClicks({ type: 'stop', datetime: new Date() })}>Stop/Reset</button>
         </div>
