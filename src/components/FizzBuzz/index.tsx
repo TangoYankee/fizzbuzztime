@@ -20,6 +20,8 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
       isStopped: true,
       fizzBuzzError: { type: FizzBuzzErrorTypes.none, message: '' }
     }
+    this.toggleValuesAreShown = this.toggleValuesAreShown.bind(this)
+    this.updateValue = this.updateValue.bind(this)
   }
 
   updateTimerClicks (timerClick: TimerClick) {
@@ -93,7 +95,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     /* Send state of FizzBuzz parent to prop of Values child */
     return (
       <Values
-        toggleValuesAreShown={() => this.toggleValuesAreShown()}
+        toggleValuesAreShown={this.toggleValuesAreShown}
         fizzValue={this.state.fizzValue}
         buzzValue={this.state.buzzValue}
         updateValue={this.updateValue}
@@ -106,7 +108,7 @@ export class FizzBuzz extends React.Component<{}, FizzBuzzState> {
     /* Send state of FizzBuzz parent to prop of Timer child */
     return (
       <Timer
-        toggleValuesAreShown={() => this.toggleValuesAreShown()}
+        toggleValuesAreShown={this.toggleValuesAreShown}
         timerClicks={this.state.timerClicks}
         updateTimerClicks={(timerClick: TimerClick) => this.updateTimerClicks(timerClick)}
         isStopped={this.state.isStopped}

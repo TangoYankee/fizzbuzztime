@@ -15,6 +15,7 @@ export class Timer extends React.Component<TimerProps, TimerState> {
     this.state = {
       elapsedMilliSecs: 0
     }
+    this.rollingTimer = this.rollingTimer.bind(this)
   }
 
   rollingTimer () {
@@ -35,10 +36,10 @@ export class Timer extends React.Component<TimerProps, TimerState> {
   }
 
   componentDidMount () {
-    /* 1/25 milliseconds is the slowest update rate without noticeable lag in mounting timer. */
+    /* 1/250 milliseconds is the slowest update rate without noticeable lag in mounting timer. */
     const elapsedMilliSecs:number = getElapsedAtTime(this.props.timerClicks, this.props.isStopped).elapsedMilliSecs
     this.setState({ elapsedMilliSecs })
-    this.interval = setInterval(() => this.rollingTimer(), updateInterval)
+    this.interval = setInterval(this.rollingTimer, updateInterval)
   }
 
   componentWillUnmount () {

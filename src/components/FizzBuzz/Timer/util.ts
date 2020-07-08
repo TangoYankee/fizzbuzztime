@@ -1,5 +1,5 @@
 export const updateInterval: number = 250
-/* Once per twenty five milliseconds is the slowest update rate without noticeable lag in mounting timer. */
+/* Once per quarter second is the slowest update rate without noticeable lag in mounting timer. */
 
 export const formatTime = (elapsedMilliSecs: number): string => {
   /* Desired time format: h:mm:ss.
